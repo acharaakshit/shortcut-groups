@@ -1,0 +1,42 @@
+__pycache__/
+*.py[cod]
+
+.cache/
+
+*.log
+*.out
+
+.venv/
+venv/
+
+# result files
+*/**.zip
+*/**.csv
+*/**.egg-info
+*/**__pycache__
+*/**/**__pycache__
+
+# plotting code is not really needed, contribution map visualisation is anyways provided
+plots/
+# saved results
+results/
+# bash scripts for running experiments, plotting
+scripts/
+
+# risk additional experiments
+
+# auxiliary model analysis
+exps/risk/auxiliary_model_analysis.py
+# quadrant decomposition
+exps/risk/quadrant_decomposition_risk_analysis.py
+#  alredy covered in the main analysis
+exps/risk/risk_model_seed_stability.py
+# sensitivity of risk scores / errors found across number of shortcut groups and images (varying inspection budget)
+exps/risk/sensitivity_inspection_sgroup.py
+
+# intervention additional experiments
+
+# specific intervention run not required, core intervention files anyways show the Q,K,V,MLP intervention design 
+exps/interventions/vit_block_analysis.py
+# target layer analysis is just an ablation, not needed as such
+exps/interventions/target_layer_analysis.py
