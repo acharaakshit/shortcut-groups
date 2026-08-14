@@ -10,13 +10,18 @@ dependencies = [
 
 [project.optional-dependencies]
 experiments = [
+    "lightning",
     "lxt",
     "matplotlib",
+    "monai",
     "pandas",
     "pillow",
+    "scikit-image",
     "scipy",
     "timm",
+    "timm-3d",
     "torch",
+    "torchmetrics",
     "torchvision",
     "tqdm",
     "zennit",
