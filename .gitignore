@@ -18,6 +18,8 @@ venv/
 
 # plotting code is not really needed, contribution map visualisation is anyways provided
 plots/
+# plotting outputs
+figures/
 # saved results
 results/
 # bash scripts for running experiments, plotting
@@ -40,3 +42,7 @@ exps/risk/sensitivity_inspection_sgroup.py
 exps/interventions/vit_block_analysis.py
 # target layer analysis is just an ablation, not needed as such
 exps/interventions/target_layer_analysis.py
+# confidence intervals are not really related to the implementation so no need to share
+exps/interventions/image_bootstrap.py
+# just the same combined suppression and task amplification on held-out set, no need to share as nothing new here
+exps/interventions/heldout_interventions.py
