@@ -5,7 +5,10 @@ import torch
 from models import Classifier2D
 
 from shortcut_groups.datasets import dataset_counts, get_dataset
-from shortcut_groups.interventions.evaluation import evaluate_batches
+from shortcut_groups.interventions.evaluation import (
+    metrics_from_predictions,
+    predict_batches,
+)
 from shortcut_groups.interventions.resnet import forward_resnet_intervention
 from shortcut_groups.interventions.vit import (
     patch_vit,
@@ -28,14 +31,16 @@ def load_test_dataset(artifact_root, dataset):
     return get_dataset(dataset, artifact_root)
 
 # load the model using OSCAR
-def load_audited_model(artifact_root, dataset, model, seed, device):
-    train_count, val_count = dataset_counts(dataset)
-    ckpt = Path(artifact_root) / dataset / "saved_data/models" / (
-        f"MODEL_{model}_3_SEED2D_{seed}_BASELINE_None_None_"
-        f"{train_count}_{val_count}_F1.ckpt"
-    )
+def load_audited_model(artifact_root, dataset, model, seed, device, *, role="ts", checkpoint=None):
+    if checkpoint is None:
+        train_count, val_count = dataset_counts(dataset)
+        suffix = {"ts": f"None_None_{train_count}_{val_count}",
+                  "ba": "True_None", "sa": "True_True"}[role]
+        checkpoint = Path(artifact_root) / dataset / "saved_data/models" / (
+            f"MODEL_{model}_3_SEED2D_{seed}_BASELINE_{suffix}_F1.ckpt"
+        )
     checkpoint_kwargs = {
-        "checkpoint_path": ckpt,
+        "checkpoint_path": Path(checkpoint),
         "model_alias": "resnet50.am_in1k" if model == "resnet" else "vit",
         "num_classes": 2,
         "in_channels": 3,
@@ -75,6 +80,7 @@ def evaluate_intervention(
     resnet_target=None,
     vit_targets=("value",),
     vit_layer_mode=None,
+    return_predictions=False,
 ):
     per_image = shortcut.ndim == 2
     fixed_token_scale = None
@@ -139,7 +145,7 @@ def evaluate_intervention(
         ):
             return model(x)
 
-    return evaluate_batches(
+    predictions = predict_batches(
         model,
         dataset,
         indices,
@@ -147,3 +153,6 @@ def evaluate_intervention(
         logits_fn=intervened_logits,
         desc=desc,
     )
+    if return_predictions:
+        return predictions
+    return metrics_from_predictions(*predictions)
