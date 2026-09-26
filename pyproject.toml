@@ -10,6 +10,7 @@ dependencies = [
 
 [project.optional-dependencies]
 experiments = [
+    "domino==0.1.5",
     "lightning",
     "lxt",
     "matplotlib",
